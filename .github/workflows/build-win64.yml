@@ -19,9 +19,11 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore NuGet packages
+        working-directory: HaRepacker
         run: dotnet restore HaRepacker.csproj
 
       - name: Build solution
+        working-directory: HaRepacker
         run: dotnet build HaRepacker.csproj --configuration Release
 
       - name: Upload artifact
