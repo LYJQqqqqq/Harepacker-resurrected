@@ -1,3 +1,4 @@
+# 文件：.github/workflows/build-win64.yml
 name: Build HaRepacker (Windows x64)
 
 on:
@@ -10,22 +11,27 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      # 1. 拉代码
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup .NET
+      # 2. 安装 .NET 8 SDK
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
 
+      # 3. 进 HaRepacker 子目录，restore
       - name: Restore NuGet packages
         working-directory: HaRepacker
         run: dotnet restore HaRepacker.csproj
 
+      # 4. 同目录下 build Release
       - name: Build solution
         working-directory: HaRepacker
         run: dotnet build HaRepacker.csproj --configuration Release
 
+      # 5. 把生成的 exe 当做 artifact 上传
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
