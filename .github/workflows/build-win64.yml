@@ -11,31 +11,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. 自动找出 .csproj，避免硬编码路径
-      - name: Find project file
-        id: find_proj
-        run: |
-          echo ">> Searching for .csproj..."
-          proj=$(Get-ChildItem -Path . -Recurse -Filter *.csproj | Select-Object -First 1).FullName
-          if (-not $proj) { Write-Error "No .csproj found."; exit 1 }
-          echo "project_path=$proj" >> $GITHUB_OUTPUT
-
-      # 3. 安装 .NET SDK
+      # 2. 安装 .NET SDK
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
 
-      # 4. 发布单文件 EXE
-      - name: Publish single-file EXE
+      # 3. Restore & Publish 主项目
+      - name: Restore and Publish single-file EXE
         run: |
-          echo ">> Publishing project at ${{ steps.find_proj.outputs.project_path }}..."
-          dotnet publish "${{ steps.find_proj.outputs.project_path }}" \
+          echo ">> Restoring HaRepacker-resurrected.csproj..."
+          dotnet restore HaRepacker/Harepacker-resurrected.csproj
+
+          echo ">> Publishing single-file EXE..."
+          dotnet publish HaRepacker/Harepacker-resurrected.csproj \
             -c Release -r win-x64 \
-            /p:PublishSingleFile=true /p:PublishTrimmed=true \
+            /p:PublishSingleFile=true \
+            /p:PublishTrimmed=true \
             -o output
 
-      # 5. 上传产物
+      # 4. 上传产物
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
