@@ -1,5 +1,4 @@
-name: Build HaRepacker (Windows x64)
-
+# .github/workflows/build-win64.yml
 on:
   workflow_dispatch:
 
@@ -7,30 +6,23 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      # 1. 拉代码
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. 安装 .NET SDK
-      - name: Setup .NET
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore and Publish single-file EXE
-        # 明确用 Bash shell
-        shell: bash
+      - name: Restore and publish HaRepacker
+        shell: cmd
         run: |
-          echo ">> Restoring project..."
-          dotnet restore HaRepacker/Harepacker-resurrected.csproj
+          echo Restoring HaRepacker solution...
+          dotnet restore "HaRepacker\Harepacker-resurrected.csproj"
+          echo Publishing single-file EXE (Release, win-x64)...
+          dotnet publish "HaRepacker\Harepacker-resurrected.csproj" -c Release -r win-x64 /p:PublishSingleFile=true /p:PublishTrimmed=true -o output
 
-          echo ">> Publishing single-file EXE..."
-          dotnet publish HaRepacker/Harepacker-resurrected.csproj -c Release -r win-x64 \
-            /p:PublishSingleFile=true /p:PublishTrimmed=true -o output
-
-
-      # 4. 上传产物
-      - name: Upload Artifact
+      - name: Upload HaRepacker-Win64 artifact
         uses: actions/upload-artifact@v4
         with:
           name: HaRepacker-Win64
