@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. 安装 .NET 8 SDK
+      # 2. 安装 .NET SDK
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
@@ -34,4 +34,8 @@ jobs:
             -o output
 
       # 4. 上传产物
-      - name: Upload HaRepacker‑Win6
+      - name: Upload HaRepacker‑Win64 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HaRepacker-Win64
+          path: output
