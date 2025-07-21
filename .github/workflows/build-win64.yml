@@ -25,7 +25,7 @@ jobs:
         run: dotnet build HaRepacker/HaRepacker.csproj --configuration Release
 
       - name: Upload artifact
-        uses: actions/upload-artifact@4
+        uses: actions/upload-artifact@v4
         with:
           name: HaRepacker-x64
           path: HaRepacker/bin/Release/net8.0-windows/**/*.exe
