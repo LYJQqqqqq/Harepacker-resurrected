@@ -28,7 +28,7 @@ jobs:
         run: dotnet publish HaRepacker/HaRepacker.csproj --configuration Release --output ./output
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: HaRepacker-Win64
           path: ./output
