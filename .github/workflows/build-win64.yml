@@ -6,27 +6,36 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
+      # 1. 拉代码
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # --- 新增：打印仓库文件树，帮助定位 .csproj 路径 ---
-      - name: List repository files
-        run: dir /s
+      # 2. 自动找出 .csproj，避免硬编码路径
+      - name: Find project file
+        id: find_proj
+        run: |
+          echo ">> Searching for .csproj..."
+          proj=$(Get-ChildItem -Path . -Recurse -Filter *.csproj | Select-Object -First 1).FullName
+          if (-not $proj) { Write-Error "No .csproj found."; exit 1 }
+          echo "project_path=$proj" >> $GITHUB_OUTPUT
 
+      # 3. 安装 .NET SDK
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
 
+      # 4. 发布单文件 EXE
       - name: Publish single-file EXE
         run: |
-          dotnet publish HaRepacker/Harepacker-resurrected.csproj \
+          echo ">> Publishing project at ${{ steps.find_proj.outputs.project_path }}..."
+          dotnet publish "${{ steps.find_proj.outputs.project_path }}" \
             -c Release -r win-x64 \
             /p:PublishSingleFile=true /p:PublishTrimmed=true \
             -o output
 
+      # 5. 上传产物
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
