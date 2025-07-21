@@ -17,18 +17,17 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      # 3. Restore & Publish 主项目
       - name: Restore and Publish single-file EXE
+        # 明确用 Bash shell
+        shell: bash
         run: |
-          echo ">> Restoring HaRepacker-resurrected.csproj..."
+          echo ">> Restoring project..."
           dotnet restore HaRepacker/Harepacker-resurrected.csproj
 
           echo ">> Publishing single-file EXE..."
-          dotnet publish HaRepacker/Harepacker-resurrected.csproj \
-            -c Release -r win-x64 \
-            /p:PublishSingleFile=true \
-            /p:PublishTrimmed=true \
-            -o output
+          dotnet publish HaRepacker/Harepacker-resurrected.csproj -c Release -r win-x64 \
+            /p:PublishSingleFile=true /p:PublishTrimmed=true -o output
+
 
       # 4. 上传产物
       - name: Upload Artifact
