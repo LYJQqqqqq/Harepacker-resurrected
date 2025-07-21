@@ -1,8 +1,6 @@
-name: Build HaRepacker Win64
+name: Build HaRepacker (Windows x64)
 
 on:
-  push:
-    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -16,19 +14,17 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
 
-      - name: Restore dependencies
-        run: dotnet restore HaRepacker/Harepacker-resurrected.csproj
-
-      - name: Build
-        run: dotnet publish HaRepacker/Harepacker-resurrected.csproj \ --configuration Release
-
-      - name: Publish
-        run: dotnet publish HaRepacker/HaRepacker.csproj --configuration Release --output ./output
+      - name: Publish single-file EXE
+        run: |
+          dotnet publish HaRepacker/Harepacker-resurrected.csproj \
+            -c Release -r win-x64 \
+            /p:PublishSingleFile=true /p:PublishTrimmed=true \
+            -o output
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: HaRepacker-Win64
-          path: ./output
+          path: output
