@@ -1,4 +1,4 @@
-name: Build Windows (x64)
+name: build
 
 on:
   push:
@@ -11,25 +11,32 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Set up job
+      run: echo "Job started"
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '8.0.x'
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Restore packages
-        run: dotnet restore HaRepacker/Harepacker-resurrected.csproj
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
 
-      - name: Build solution
-        run: dotnet build HaRepacker/Harepacker-resurrected.csproj --configuration Release --no-restore
+    - name: Restore NuGet packages
+      run: dotnet restore HaRepacker/Harepacker-resurrected.csproj
 
-      - name: Publish output
-        run: dotnet publish HaRepacker/Harepacker-resurrected.csproj --configuration Release --output ./publish --no-build
+    - name: Build solution
+      run: dotnet build HaRepacker/Harepacker-resurrected.csproj --configuration Release --no-restore
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: HaRepacker-win-x64
-          path: ./publish
+    - name: Publish output
+      run: dotnet publish HaRepacker/Harepacker-resurrected.csproj --configuration Release --output ./publish --no-build
+
+    - name: Compress published output
+      run: |
+        Compress-Archive -Path ./publish/* -DestinationPath HaRepacker.zip
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: HaRepacker-win64
+        path: HaRepacker.zip
