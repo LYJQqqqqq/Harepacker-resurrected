@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <!-- 启用 WPF 支持 -->
+    <UseWPF>true</UseWPF>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- 关闭默认的 Compile 全部 .cs，改为显式管理 -->
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
-  <!-- 1. 源码：使用 Unix 风格 glob 把所有 .cs 都包括 -->
+  <!-- 1. 显式包含所有源码 -->
   <ItemGroup>
     <Compile Include="**/*.cs" />
+    <EmbeddedResource Include="**/*.xaml" />
   </ItemGroup>
 
-  <!-- 2. WZ 处理库 -->
+  <!-- 2. WZ 处理库 (MapleLib) -->
   <ItemGroup>
     <ProjectReference Include="..\MapleLib\MapleLib\MapleLib.csproj" />
   </ItemGroup>
 
-  <!-- 3. 图形/资源依赖 -->
+  <!-- 3. 图形／资源依赖 -->
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.2.1105" />
     <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.2.1105" />
@@ -25,10 +30,11 @@
     <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
   </ItemGroup>
 
-  <!-- 4. Spine C# 运行时 -->
+  <!-- 4. Spine C# 运行时库 -->
   <ItemGroup>
     <Reference Include="spine-csharp">
       <HintPath>..\libs\spine-csharp.dll</HintPath>
     </Reference>
   </ItemGroup>
+
 </Project>
