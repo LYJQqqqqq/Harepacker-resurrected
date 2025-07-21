@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- 1. 关闭 SDK 自动包含所有 .cs 文件，改为显式管理 -->
+  <!-- 1. 基本属性：关闭 SDK 默认的 Compile，指定框架 -->
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -14,15 +14,21 @@
     <EmbeddedResource Include="Resources\**\*" />
   </ItemGroup>
 
-  <!-- 3. NuGet 包引用：补足 CI 所需依赖 -->
+  <!-- 3. 对 MapleLib WZ 库的引用 -->
+  <ItemGroup>
+    <ProjectReference Include="..\MapleLib\MapleLib\MapleLib.csproj" />
+  </ItemGroup>
+
+  <!-- 4. NuGet 包引用：补齐 Image、XNA/MonoGame、资源支持 -->
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.2.1105" />
+    <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.2.1105" />
   </ItemGroup>
 
-  <!-- 4. Spine C# 运行时库 -->
+  <!-- 5. 引用预编译的 Spine-C# 运行时库 -->
   <ItemGroup>
     <Reference Include="spine-csharp">
       <HintPath>..\libs\spine-csharp.dll</HintPath>
