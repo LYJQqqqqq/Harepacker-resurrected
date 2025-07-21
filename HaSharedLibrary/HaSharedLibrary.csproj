@@ -2,7 +2,6 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    …  
   </PropertyGroup>
 
   <!-- 源码 -->
@@ -10,18 +9,20 @@
     <Compile Include="**\*.cs" />
   </ItemGroup>
 
-  <!-- 恢复 MapleLib WZ 库 -->
+  <!-- WZ 处理库 -->
   <ItemGroup>
     <ProjectReference Include="..\MapleLib\MapleLib\MapleLib.csproj" />
   </ItemGroup>
 
-  <!-- XNA/MonoGame 支持 -->
+  <!-- 图形/资源包 -->
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.2.1105" />
     <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.2.1105" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+    <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
   </ItemGroup>
 
-  <!-- Spine-C# 引用 -->
+  <!-- Spine C# 运行时 -->
   <ItemGroup>
     <Reference Include="spine-csharp">
       <HintPath>..\libs\spine-csharp.dll</HintPath>
