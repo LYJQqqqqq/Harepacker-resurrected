@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- 1. 属性组：关闭默认编译项目文件夹下所有 *.cs -->
+  <!-- 1. 属性：关闭默认 Compile，启用必要设置 -->
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <!-- 关键：关闭 SDK 的默认 Compile 项 -->
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
-  <!-- 2. 源代码和资源：显式包含所有 .cs 和资源 -->
+  <!-- 2. 源码和资源：显式包含所有 .cs 与资源 -->
   <ItemGroup>
     <Compile Include="**\*.cs" />
     <EmbeddedResource Include="Resources\**\*" />
   </ItemGroup>
 
-  <!-- 3. 依赖项目引用（示例：MapleLib） -->
-  <ItemGroup>
+  <!-- 3. 移除 MapleLib 项目引用（该路径在 CI 上不存在） -->
+  <!-- <ItemGroup>
     <ProjectReference Include="..\MapleLib\MapleLib\MapleLib.csproj" />
-  </ItemGroup>
+  </ItemGroup> -->
 
-  <!-- 4. NuGet 包引用 -->
+  <!-- 4. NuGet 包引用：新增 System.Resources.Extensions -->
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
     <!-- 其他 PackageReference … -->
   </ItemGroup>
 
-  <!-- 5. 引用预编译 Spine-C# 运行时库 -->
+  <!-- 5. Spine-C# 运行时库 引用 -->
   <ItemGroup>
     <Reference Include="spine-csharp">
       <HintPath>..\libs\spine-csharp.dll</HintPath>
