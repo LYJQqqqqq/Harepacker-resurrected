@@ -1,40 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-
   <PropertyGroup>
-    <!-- 启用 WPF 支持 -->
     <UseWPF>true</UseWPF>
     <TargetFramework>net8.0-windows</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <!-- 关闭默认的 Compile 全部 .cs，改为显式管理 -->
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
-  <!-- 1. 显式包含所有源码 -->
+  <!-- 1. 源码：显式包含全部 .cs 和 .xaml -->
   <ItemGroup>
     <Compile Include="**/*.cs" />
     <EmbeddedResource Include="**/*.xaml" />
   </ItemGroup>
 
-  <!-- 2. WZ 处理库 (MapleLib) -->
+  <!-- 2. WZ 处理源码：直接编译 HaSharedLibrary/Wz 下的文件 -->
+  <!--    (替代 MapleLib 子模块) -->
   <ItemGroup>
-    <ProjectReference Include="..\MapleLib\MapleLib\MapleLib.csproj" />
+    <Compile Include="Wz/**/*.cs" />
   </ItemGroup>
 
-  <!-- 3. 图形／资源依赖 -->
+  <!-- 3. GUI/Converter/Render 等源码已由上面 **/*.cs 全部包含 -->
+
+  <!-- 4. NuGet 包引用：补齐图形、音频、资源依赖 -->
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.2.1105" />
     <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.2.1105" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
     <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <!-- 视项目是否用到 Asio/WinForms，可继续引用其他 NAudio 包 -->
   </ItemGroup>
 
-  <!-- 4. Spine C# 运行时库 -->
+  <!-- 5. Spine C# 运行时库 -->
   <ItemGroup>
     <Reference Include="spine-csharp">
       <HintPath>..\libs\spine-csharp.dll</HintPath>
     </Reference>
   </ItemGroup>
-
 </Project>
