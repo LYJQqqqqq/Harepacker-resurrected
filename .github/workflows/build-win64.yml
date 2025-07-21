@@ -1,7 +1,8 @@
-build-win64.yml
-name: Build HaRepacker (Windows x64)
+name: Build HaRepacker Win64
 
 on:
+  push:
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -9,23 +10,25 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '6.0.x'
 
-      - name: Restore NuGet packages
+      - name: Restore dependencies
         run: dotnet restore HaRepacker/HaRepacker.csproj
 
-      - name: Build solution
-        run: dotnet build HaRepacker/HaRepacker.csproj -c Release --no-restore
+      - name: Build
+        run: dotnet build HaRepacker/HaRepacker.csproj --configuration Release
 
-      - name: Upload compiled EXE
-        uses: actions/upload-artifact@v4
+      - name: Publish
+        run: dotnet publish HaRepacker/HaRepacker.csproj --configuration Release --output ./output
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: HaRepacker-x64
-          path: HaRepacker/bin/Release/net8.0-windows/**/*.exe
-Add GitHub Actions build script for Windows
+          name: HaRepacker-Win64
+          path: ./output
