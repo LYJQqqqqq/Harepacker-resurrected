@@ -1,10 +1,9 @@
-name: build
+name: Build HaRepacker (Windows x64)
 
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,16 +13,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup .NET SDK
+      - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.x'
 
-      - name: Restore & Publish HaRepacker
-        run: dotnet publish "Build HaRepacker (Windows x64)/Build HaRepacker (Windows x64).csproj" -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o HaRepacker-Win64
+      - name: Restore NuGet packages
+        run: dotnet restore HaRepacker/HaRepacker.csproj
 
-      - name: Upload HaRepacker-Win64 artifact
-        uses: actions/upload-artifact@v4
+      - name: Build solution
+        run: dotnet build HaRepacker/HaRepacker.csproj --configuration Release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: HaRepacker-Win64
-          path: HaRepacker-Win64
+          name: HaRepacker-x64
+          path: HaRepacker/bin/Release/net8.0-windows/**/*.exe
